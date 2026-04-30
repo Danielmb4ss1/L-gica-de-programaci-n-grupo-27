@@ -1,0 +1,55 @@
+public class Main {
+
+    // Método auxiliar para imprimir el arreglo en cualquier momento
+    public static void imprimirArreglo(int[] vec) {
+        System.out.print("[");
+        for (int i = 0; i < vec.length; i++) {
+            System.out.print(vec[i]);
+            if (i < vec.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+    }
+
+    public static void main(String[] args) {
+        int[] vec = {64, 25, 12, 22}; // Un arreglo más corto para una salida más clara
+
+        System.out.println("## Ordenamiento por Inserción: Paso a Paso ##");
+        System.out.print("Arreglo Original: ");
+        imprimirArreglo(vec);
+        System.out.println("\n--- INICIO DEL ORDENAMIENTO ---");
+
+        int n = vec.length;
+        int temp, j;
+
+        // Bucle externo: toma el elemento a insertar, empezando por el segundo
+        for (int i = 1; i < n; i++) {
+            System.out.println("\n--- Pasada N° " + i + ": Insertando el valor " + vec[i] + " ---");
+            
+            // Guarda el valor del elemento a insertar
+            temp = vec[i];
+            j = i - 1;
+
+            // Bucle interno (while): desplaza los elementos de la parte ordenada
+            // que son mayores que 'temp', para hacerle espacio.
+            while (j >= 0 && vec[j] > temp) {
+                System.out.println("  Como " + vec[j] + " > " + temp + ", se desplaza " + vec[j] + " a la derecha.");
+                vec[j + 1] = vec[j];
+                j = j - 1;
+                System.out.print("  Estado intermedio: ");
+                imprimirArreglo(vec);
+            }
+            
+            // Inserta el elemento guardado en su posición correcta
+            vec[j + 1] = temp;
+            System.out.println("  -> Se inserta el " + temp + " en la posición [" + (j + 1) + "].");
+            System.out.print("  Estado del arreglo al final de la pasada: ");
+            imprimirArreglo(vec);
+        }
+
+        System.out.println("\n--- FIN DEL ORDENAMIENTO ---");
+        System.out.print("Arreglo Final Ordenado: ");
+        imprimirArreglo(vec);
+    }
+}

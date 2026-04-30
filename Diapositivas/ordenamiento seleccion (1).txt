@@ -1,0 +1,60 @@
+public class Main {
+
+    // Método auxiliar para imprimir el arreglo en cualquier momento
+    public static void imprimirArreglo(int[] vec) {
+        System.out.print("[");
+        for (int i = 0; i < vec.length; i++) {
+            System.out.print(vec[i]);
+            if (i < vec.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
+    }
+
+    public static void main(String[] args) {
+        int[] vec = {64, 25, 12, 22}; // Un arreglo más corto para una salida más clara
+
+        System.out.println("## Ordenamiento por Selección: Paso a Paso ##");
+        System.out.print("Arreglo Original: ");
+        imprimirArreglo(vec);
+        System.out.println("\n--- INICIO DEL ORDENAMIENTO ---");
+
+        int n = vec.length;
+        int temp, posicionMinimo;
+
+        // Bucle externo: recorre las posiciones donde se colocará el mínimo
+        for (int i = 0; i < n - 1; i++) {
+            System.out.println("\n--- Pasada N° " + (i + 1) + " ---");
+            
+            // Suponemos que el mínimo está en la primera posición de la parte desordenada
+            posicionMinimo = i;
+            System.out.println("  Mínimo inicial supuesto: " + vec[posicionMinimo] + " en la posición [" + posicionMinimo + "]");
+
+            // Bucle interno: busca el verdadero mínimo en el resto del arreglo
+            System.out.println("  Buscando un número menor en el resto del arreglo...");
+            for (int j = i + 1; j < n; j++) {
+                System.out.print("    Comparando " + vec[j] + " con " + vec[posicionMinimo]);
+                if (vec[j] < vec[posicionMinimo]) {
+                    posicionMinimo = j;
+                    System.out.println(" -> ¡Nuevo mínimo encontrado! Ahora es " + vec[posicionMinimo] + " en la posición [" + posicionMinimo + "]");
+                } else {
+                    System.out.println(" -> (Sin cambios)");
+                }
+            }
+            
+            // Intercambia el mínimo encontrado con el elemento de la posición actual 'i'
+            System.out.println("  -> Búsqueda finalizada. El mínimo es " + vec[posicionMinimo] + ". Se intercambia con la posición [" + i + "].");
+            temp = vec[i];
+            vec[i] = vec[posicionMinimo];
+            vec[posicionMinimo] = temp;
+
+            System.out.print("  Estado del arreglo al final de la pasada: ");
+            imprimirArreglo(vec);
+        }
+
+        System.out.println("\n--- FIN DEL ORDENAMIENTO ---");
+        System.out.print("Arreglo Final Ordenado: ");
+        imprimirArreglo(vec);
+    }
+}
