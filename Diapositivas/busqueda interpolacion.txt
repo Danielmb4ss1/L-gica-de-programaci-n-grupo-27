@@ -1,0 +1,57 @@
+public class Main {
+    public static void main(String[] args) {
+        int[] arreglo = {8, 22, 7, 9, 31, 19, 5, 13};
+        int valorBuscado = 19;
+
+        // --- 1. Mostrar arreglo original ---
+        System.out.print("Arreglo original: [");
+        for (int i = 0; i < arreglo.length; i++) {
+            System.out.print(arreglo[i]);
+            if (i < arreglo.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+
+        // --- 2. Ordenar el arreglo (Bubble Sort) ---
+        for (int i = 0; i < arreglo.length - 1; i++) {
+            for (int j = 0; j < arreglo.length - i - 1; j++) {
+                if (arreglo[j] > arreglo[j + 1]) {
+                    int temp = arreglo[j];
+                    arreglo[j] = arreglo[j + 1];
+                    arreglo[j + 1] = temp;
+                }
+            }
+        }
+
+        // --- 3. Mostrar arreglo ordenado ---
+        System.out.print("Arreglo ordenado: [");
+        for (int i = 0; i < arreglo.length; i++) {
+            System.out.print(arreglo[i]);
+            if (i < arreglo.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+
+        // --- 4. Búsqueda por Interpolación ---
+        int inicio = 0, fin = arreglo.length - 1, pos = -1;
+
+        while (inicio <= fin && valorBuscado >= arreglo[inicio] && valorBuscado <= arreglo[fin]) {
+            // Fórmula de interpolación
+            int posEstim = inicio + ((valorBuscado - arreglo[inicio]) * (fin - inicio)) / (arreglo[fin] - arreglo[inicio]);
+
+            if (arreglo[posEstim] == valorBuscado) {
+                pos = posEstim;
+                break;
+            }
+
+            if (arreglo[posEstim] < valorBuscado)
+                inicio = posEstim + 1;
+            else
+                fin = posEstim - 1;
+        }
+
+        // --- 5. Resultado ---
+        if (pos != -1)
+            System.out.println("Valor " + valorBuscado + " encontrado en la posición: " + pos);
+        else
+            System.out.println("Valor " + valorBuscado + " no encontrado en el arreglo.");
+    }
+}

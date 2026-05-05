@@ -1,0 +1,84 @@
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        int N = 20000000;                 // tamaño (ajusta según tu máquina)
+        int[] a = new int[N];
+        Random rnd = new Random(12345);
+
+        // llenar con valores aleatorios
+        for (int i = 0; i < N; i++) a[i] = rnd.nextInt(Integer.MAX_VALUE / 2);
+
+        int clave = a[N - 2]; // penúltimo elemento
+        System.out.println("N = " + N + " | clave (penúltimo) = " + clave);
+
+        // --- Búsqueda secuencial (en arreglo original a) ---
+        long t0 = System.nanoTime();
+        int posSec = -1;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] == clave) { posSec = i; break; }
+        }
+        long t1 = System.nanoTime();
+        System.out.printf("Secuencial -> pos=%d, tiempo=%.3f ms%n", posSec, (t1 - t0) / 1_000_000.0);
+
+        // --- Copiar manualmente a b (sin usar librerías) ---
+        int[] b = new int[N];
+        for (int i = 0; i < N; i++) b[i] = a[i];
+
+        // --- Ordenamiento: Merge Sort iterativo (bottom-up) sobre b ---
+        int[] aux = new int[N];
+        long sortStart = System.nanoTime();
+        for (int width = 1; width < N; width <<= 1) {
+            for (int left = 0; left < N; left += 2 * width) {
+                int mid = Math.min(left + width, N);
+                int right = Math.min(left + 2 * width, N);
+
+                int i = left, j = mid, k = left;
+                while (i < mid && j < right) {
+                    if (b[i] <= b[j]) aux[k++] = b[i++];
+                    else aux[k++] = b[j++];
+                }
+                while (i < mid) aux[k++] = b[i++];
+                while (j < right) aux[k++] = b[j++];
+
+                for (k = left; k < right; k++) b[k] = aux[k];
+            }
+        }
+        long sortEnd = System.nanoTime();
+        System.out.printf("Ordenamiento (merge sort iterativo) tiempo=%.3f ms%n", (sortEnd - sortStart) / 1_000_000.0);
+
+        // --- Búsqueda binaria (iterativa) en b ---
+        t0 = System.nanoTime();
+        int lo = 0, hi = N - 1, posBin = -1;
+        while (lo <= hi) {
+            int mid = lo + ((hi - lo) >> 1);
+            if (b[mid] == clave) { posBin = mid; break; }
+            if (b[mid] < clave) lo = mid + 1;
+            else hi = mid - 1;
+        }
+        t1 = System.nanoTime();
+        System.out.printf("Binaria -> pos=%d, tiempo=%.3f ms%n", posBin, (t1 - t0) / 1_000_000.0);
+
+        // --- Búsqueda por interpolación (iterativa) en b ---
+        t0 = System.nanoTime();
+        int posInt = -1;
+        lo = 0; hi = N - 1;
+        while (lo <= hi && clave >= b[lo] && clave <= b[hi]) {
+            if (b[hi] == b[lo]) {
+                if (b[lo] == clave) posInt = lo;
+                break;
+            }
+            long num = (long)(clave - b[lo]) * (hi - lo);
+            long den = (long)(b[hi] - b[lo]);
+            int probe = lo + (int)(num / den);
+            if (probe < lo) probe = lo;
+            else if (probe > hi) probe = hi;
+
+            if (b[probe] == clave) { posInt = probe; break; }
+            if (b[probe] < clave) lo = probe + 1;
+            else hi = probe - 1;
+        }
+        t1 = System.nanoTime();
+        System.out.printf("Interpolación -> pos=%d, tiempo=%.3f ms%n", posInt, (t1 - t0) / 1_000_000.0);
+    }
+}
